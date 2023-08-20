@@ -30,7 +30,8 @@ public class ItemsController : ControllerBase
     {
         var result = items.FirstOrDefault(i => i.Id == id);
 
-        if(result is null){
+        if (result is null)
+        {
             return NotFound();
         }
 
@@ -50,7 +51,12 @@ public class ItemsController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateItem(Guid id, UpdateItemDto updateItem)
     {
-        var existingItem = items.SingleOrDefault(item => item.Id == id);
+        var existingItem = items.FirstOrDefault(i => i.Id == id);
+
+        if (existingItem is null)
+        {
+            return NotFound();
+        }
 
         var updatedItem = existingItem! with
         {
@@ -66,9 +72,14 @@ public class ItemsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-       public IActionResult DeleteItem(Guid id)
+    public IActionResult DeleteItem(Guid id)
     {
-        var existingItem = items.SingleOrDefault(item => item.Id == id);
+        var existingItem = items.SingleOrDefault(i => i.Id == id);
+
+        if (existingItem is null)
+        {
+            return NotFound();
+        }
 
         int indexToDelete = items.FindIndex(i => i.Id == id);
 
