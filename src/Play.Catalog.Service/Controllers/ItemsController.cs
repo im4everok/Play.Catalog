@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Service.Dtos;
 using Play.Catalog.Service.Entities;
-using Play.Catalog.Service.Repositories;
+using Play.Common;
 
 namespace Play.Catalog.Service.Controllers;
 
@@ -36,7 +36,7 @@ public class ItemsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ItemDto>> GetById(Guid id)
     {
-        var result = await itemRepository.GetByIdAsync(id);
+        var result = await itemRepository.GetAsync(id);
 
         if (result is null)
         {
@@ -65,7 +65,7 @@ public class ItemsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateItem(Guid id, UpdateItemDto updateItem)
     {
-        var existingItem = await itemRepository.GetByIdAsync(id);
+        var existingItem = await itemRepository.GetAsync(id);
 
         if (existingItem is null)
         {
@@ -84,7 +84,7 @@ public class ItemsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteItem(Guid id)
     {
-        var existingItem = await itemRepository.GetByIdAsync(id);
+        var existingItem = await itemRepository.GetAsync(id);
 
         if (existingItem is null)
         {
