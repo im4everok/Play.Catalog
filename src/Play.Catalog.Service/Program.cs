@@ -1,4 +1,5 @@
 using Play.Catalog.Service.Entities;
+using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 using Play.Common.Settings;
 
@@ -7,17 +8,21 @@ ServiceSettings serviceSettings;
 
 // Add services to the container.
 
-builder.Services.AddControllers(options =>
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
-serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
-builder.Services.AddMongo().AddMongoRepository<Item>("items");
+services.AddMongo().AddMongoRepository<Item>("items")
+    .AddMassTransitWithRabbitMq();
 
 var app = builder.Build();
 
